@@ -6,7 +6,7 @@ const staticWallpapers = [
         category: "nature",
         resolution: "1920x1080",
         size: "2.4 MB",
-        img: "https://picsum.photos/seed/mountain1/1920/1080",
+        url: "https://picsum.photos/seed/mountain1/1920/1080",
         downloadUrl: "https://picsum.photos/seed/mountain1/1920/1080"
     },
     {
@@ -74,6 +74,45 @@ const staticWallpapers = [
     }
 ];
 
+const myImages = [
+    {
+        id: 1,
+        title: "Download Wallpaper",
+        category: "nature",
+        resolution: "1920x1080",
+        size: "2.4 MB",
+        url: "download.jfif",
+        downloadUrl: "download.jfif"
+    },
+    {
+        id: 2,
+        title: "Download Wallpaper 1",
+        category: "abstract",
+        resolution: "2560x1440",
+        size: "3.8 MB",
+        url: "download (1).jfif",
+        downloadUrl: "download (1).jfif"
+    },
+    {
+        id: 3,
+        title: "Download Wallpaper 2",
+        category: "technology",
+        resolution: "3840x2160",
+        size: "5.2 MB",
+        url: "download (2).jfif",
+        downloadUrl: "download (2).jfif"
+    },
+    {
+        id: 4,
+        title: "Kevin Wallpaper",
+        category: "space",
+        resolution: "1920x1080",
+        size: "2.8 MB",
+        url: "kevin.jfif",
+        downloadUrl: "kevin.jfif"
+    }
+];
+
 // Sample live wallpaper data
 const liveWallpapers = [
     {
@@ -133,6 +172,7 @@ let currentSettings = { ...defaultSettings };
 document.addEventListener('DOMContentLoaded', function() {
     loadSettings();
     loadStaticWallpapers();
+    loadMyImages();
     loadLiveWallpapers();
     setupEventListeners();
     setupSettingsListeners();
@@ -198,10 +238,17 @@ function loadLiveWallpapers(filter = 'all', search = '') {
         const card = createWallpaperCard(wallpaper, 'live');
         container.appendChild(card);
     });
-    
-    if (filteredWallpapers.length === 0) {
-        container.innerHTML = '<div class="loading">No live wallpapers found matching your criteria.</div>';
-    }
+}
+
+// Load my images section
+function loadMyImages() {
+    const container = document.getElementById('myImagesGallery');
+    container.innerHTML = '';
+
+    myImages.forEach(image => {
+        const card = createWallpaperCard(image, 'static');
+        container.appendChild(card);
+    });
 }
 
 // Create wallpaper card
@@ -250,8 +297,9 @@ function createWallpaperCard(wallpaper, type) {
 function downloadWallpaper(url, title, type) {
     // Create a temporary anchor element
     const link = document.createElement('a');
-    link.href = url;
-    link.download = `${title.replace(/\s+/g, '_')}.${type === 'live' ? 'mp4' : 'jpg'}`;
+    const extension = type === 'live' ? 'mp4' : (url.split('.').pop().split('?')[0] || 'jpg');
+    link.href = encodeURI(url);
+    link.download = `${title.replace(/\s+/g, '_')}.${extension}`;
     link.target = '_blank';
     
     // Trigger download
